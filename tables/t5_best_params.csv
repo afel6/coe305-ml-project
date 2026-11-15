@@ -1,0 +1,6 @@
+model,best_params,cv_mean_acc,cv_std_acc,cv_mean_train_acc
+Decision Tree,{'max_depth': 12},0.9225543478260869,0.007875748231624676,0.9758152173913043
+Random Forest,"{'max_depth': None, 'n_estimators': 300}",0.9527173913043478,0.005461888924522246,0.9997961956521738
+XGBoost,"{'learning_rate': 0.1, 'max_depth': 7, 'n_estimators': 300}",0.9576086956521739,0.009069738732760116,0.9994565217391305
+Gradient Boosting,"{'learning_rate': 0.1, 'max_depth': 5, 'n_estimators': 300}",0.954891304347826,0.007106900451424997,0.9991168478260871
+AdaBoost,"{'learning_rate': 1.0, 'n_estimators': 300}",0.9423913043478261,0.00547539176076357,0.9526494565217393

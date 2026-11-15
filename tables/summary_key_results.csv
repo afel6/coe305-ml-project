@@ -1,0 +1,37 @@
+quantity,value
+T1 baseline DT test accuracy,0.9109663409337676
+T1 CV K=3 mean accuracy,0.905433660705541
+T1 CV K=5 mean accuracy,0.913586956521739
+T1 CV K=10 mean accuracy,0.9116847826086957
+"T2 All features (Task 1 baseline, reused) test accuracy (k=57)",0.9109663409337676
+T2 MI (SelectKBest) test accuracy (k=20),0.9098805646036916
+T2 RFE (Decision Tree) test accuracy (k=40),0.9163952225841476
+T2 SelectFromModel (RF importance) test accuracy (k=20),0.9229098805646037
+T3 components for 90% variance,43.0
+T3 components for 95% variance,48.0
+T3 (a) original features [LogReg] test accuracy,0.9294245385450597
+T3 (b) PCA [LogReg] test accuracy,0.9294245385450597
+"T3 (b') PCA, 95% variance rule (n=48) [LogReg] test accuracy",0.9272529858849077
+T3 (c) MI selection → PCA [LogReg] test accuracy,0.9163952225841476
+T3 extra: (a) original features [DecisionTree (Task 1)] test accuracy,0.9109663409337676
+T3 extra: (b) PCA [DecisionTree (Task 1)] test accuracy,0.8816503800217155
+T4 chosen k,2.0
+T4 silhouette at chosen k (standardized),0.5472146913441881
+T4 k chosen after 99th-percentile capping,2.0
+T5 Decision Tree test accuracy,0.9196525515743756
+T5 Decision Tree test F1,0.8969359331476323
+T5 Random Forest test accuracy,0.9457111834961998
+T5 Random Forest test F1,0.9295774647887324
+T5 XGBoost test accuracy,0.9467969598262758
+T5 XGBoost test F1,0.9324137931034483
+T5 Gradient Boosting test accuracy,0.9457111834961998
+T5 Gradient Boosting test F1,0.930939226519337
+T5 AdaBoost test accuracy,0.9294245385450597
+T5 AdaBoost test F1,0.9093444909344491
+T5 ccp-pruned DT test accuracy,0.9163952225841476
+X1 XGBoost test accuracy 95% CI low,0.9315960912052117
+X1 XGBoost test accuracy 95% CI high,0.9609120521172638
+X1 XGBoost nested CV accuracy,0.9524456521739131
+X2 lowest test cost per 1000 e-mails (cost-optimal threshold),106.40608034744842
+X4 bootstrap ARI at chosen k,0.5644369499841606
+X4 gap-statistic k,

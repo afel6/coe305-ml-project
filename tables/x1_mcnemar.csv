@@ -1,0 +1,11 @@
+model_A,model_B,A_right_B_wrong,A_wrong_B_right,p_exact,p_holm,significant_5pct
+Decision Tree,Random Forest,14,38,0.001195120320007348,0.01195120320007348,True
+Decision Tree,XGBoost,18,43,0.0018681010309752506,0.016812909278777256,True
+Decision Tree,Gradient Boosting,18,42,0.002670436282807066,0.021363490262456528,True
+XGBoost,AdaBoost,24,8,0.0070003666914999485,0.04900256684049964,True
+Random Forest,AdaBoost,23,8,0.010673840530216694,0.06404304318130016,False
+Gradient Boosting,AdaBoost,25,10,0.01667384780012071,0.08336923900060356,False
+Decision Tree,AdaBoost,30,39,0.33555761823401514,1.0,False
+Random Forest,XGBoost,11,12,1.0,1.0,False
+XGBoost,Gradient Boosting,9,8,1.0,1.0,False
+Random Forest,Gradient Boosting,12,12,1.0,1.0,False

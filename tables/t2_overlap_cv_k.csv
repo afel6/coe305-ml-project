@@ -1,0 +1,4 @@
+method,MI (SelectKBest),RFE (Decision Tree),SelectFromModel (RF importance)
+MI (SelectKBest),20 (J=1.00),18 (J=0.43),18 (J=0.82)
+RFE (Decision Tree),18 (J=0.43),40 (J=1.00),19 (J=0.46)
+SelectFromModel (RF importance),18 (J=0.82),19 (J=0.46),20 (J=1.00)

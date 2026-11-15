@@ -1,0 +1,11 @@
+model,threshold_rule,threshold,test_FP,test_FN,test_cost,test_cost_per_1000_emails,test_accuracy
+Decision Tree,default 0.5,0.5,34,41,381,413.68078175895766,0.9185667752442996
+Decision Tree,cost-optimal (chosen on training OOF),0.98,26,45,305,331.16178067318134,0.9229098805646037
+Random Forest,default 0.5,0.5,17,33,203,220.41259500542887,0.9457111834961998
+Random Forest,cost-optimal (chosen on training OOF),0.74,4,65,105,114.00651465798046,0.9250814332247557
+XGBoost,default 0.5,0.5,24,25,265,287.7307274701412,0.9467969598262758
+XGBoost,cost-optimal (chosen on training OOF),0.95,4,58,98,106.40608034744842,0.9326818675352877
+Gradient Boosting,default 0.5,0.5,24,26,266,288.81650380021716,0.9457111834961998
+Gradient Boosting,cost-optimal (chosen on training OOF),0.94,5,65,115,124.8642779587405,0.9239956568946797
+AdaBoost,default 0.5,0.5,28,37,317,344.19109663409336,0.9294245385450597
+AdaBoost,cost-optimal (chosen on training OOF),0.52,13,61,191,207.38327904451683,0.9196525515743756
