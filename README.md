@@ -9,19 +9,7 @@ Deliverables
 
 ## Reproduce
 
-On the authors' Windows machine Python is not on PATH and Windows Application Control blocks virtual-environment
-launchers (`.venv\Scripts\python.exe`, `jupyter.exe`). The working route is the uv-managed Python, called directly:
-
-```bash
-uv pip install --python "C:\Users\benda\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\python.exe" --system --break-system-packages -r requirements.txt
-& "C:\Users\benda\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\python.exe" -m jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=1800 notebook.ipynb
-& "C:\Users\benda\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\python.exe" report\build_pdf.py
-```
-
-The run prints harmless warnings (zmq event loop, unencrypted local kernel, joblib `KeyError` cleanup tracebacks);
-it succeeded if it ends with `Writing ... bytes to notebook.ipynb`.
-
-On a fresh machine with Python 3.12 installed:
+With Python 3.12 installed:
 
 ```bash
 python -m venv .venv
@@ -32,9 +20,15 @@ python -m jupyter nbconvert --to notebook --execute --inplace --ExecutePreproces
 python report/build_pdf.py        # optional: rebuild the PDF (needs Microsoft Edge or Chrome)
 ```
 
-The full notebook takes a few minutes on a laptop CPU. Every random component uses `random_state=42`
+The full notebook takes about 10 minutes on a laptop CPU. Every random component uses `random_state=42`
 (`np.random.seed(42)` is also set), so a second run reproduces the same numbers
-(`tables/summary_key_results.csv`).
+(`tables/summary_key_results.csv`). The run prints harmless warnings (zmq event loop, unencrypted local kernel,
+joblib `KeyError` clean-up tracebacks on Windows); it succeeded if it ends with `Writing ... bytes to notebook.ipynb`.
+
+**If virtual-environment launchers are blocked** (some managed Windows machines block `.venv\Scripts\python.exe`
+and `jupyter.exe` through Application Control), install the requirements into a standalone Python and call it
+directly, e.g. with uv: `uv pip install --python <path-to-python.exe> --system -r requirements.txt`, then run
+`<path-to-python.exe> -m jupyter nbconvert ...` as above.
 
 ## Layout
 
