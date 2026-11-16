@@ -64,7 +64,7 @@ Every random component uses `random_state=42` (`np.random.seed(42)` is also set)
 (Ubuntu) with Python 3.12 and with the uv route. The other tables agree up to floating-point rounding, except wall-clock
 timing columns, which differ on every run, and four tables that differ slightly on Linux: `t5_search_gradient_boosting.csv`
 (up to 10% relative on one entry), the `cv_std_acc` column of `t5_best_params.csv` (2.2%), `x2_auc.csv` (about 1e-4) and
-`x2_cost_threshold.csv` (3.1%). The committed outputs and the report's numbers come from the Windows
+`x2_cost_threshold.csv` (3.1%). The committed outputs and the report's results, apart from its timing and reproducibility comparisons, come from the Windows
 Python 3.12 run.
 
 CI (`.github/workflows/ci.yml`) executes the notebook on Ubuntu and Windows with Python 3.12 and 3.13 and checks the
