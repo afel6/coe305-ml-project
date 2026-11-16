@@ -36,13 +36,13 @@ This project studies five core machine-learning techniques on two public UCI dat
 4. K-Means clustering (Task 4);
 5. decision trees and tree ensembles (Task 5).
 
-Tasks 1, 2, 3 and 5 are supervised binary classification on **Spambase**. Task 4 is unsupervised segmentation of the **Wholesale Customers** data. All work uses Python with scikit-learn 1.5.2, XGBoost 2.1.3, pandas, NumPy and Matplotlib. No AutoML or hosted service was used. Every number in this report comes from `notebook.ipynb` (its printed outputs or the CSVs in `tables/`). Every figure is saved in `figures/`.
+Tasks 1, 2, 3 and 5 are supervised binary classification on **Spambase**. Task 4 is unsupervised segmentation of the **Wholesale Customers** data. All work uses Python with scikit-learn 1.5.2, XGBoost 2.1.3, pandas, NumPy and Matplotlib. No AutoML or hosted service was used. The results in this report come from `notebook.ipynb` (its printed outputs, its figures and the CSVs in `tables/`); differences and ratios are computed from those values, and the timing and reproducibility comparisons (Sections 4 and 10) come from separate reruns of the notebook. Every figure is saved in `figures/`.
 
 # 2. Data
 
-**Spambase (UCI #94).** 4,601 e-mails, 57 numeric features (48 word frequencies, 6 character frequencies, 3 statistics on runs of capital letters) and the label `spam` (1 = spam, 39.4%). There are no missing values. The data contain 391 exact duplicate rows (all 57 features and the label equal; every copy after the first is counted), which were not removed: 104 of the 921 test e-mails have an exact copy (all 57 features and the label equal) among the 3,680 training e-mails, so absolute test scores may be slightly optimistic, while model comparisons hold because all models share the same split. The notebook prints both counts right after the train/test split. Six feature names contain symbols (`char_freq_[`, `char_freq_$`, …). XGBoost rejects the `[` in `char_freq_[`, so all six symbol names were renamed (e.g. `char_freq_dollar`, `char_freq_excl`) by the notebook's loader `load_spambase` (see Section 9).
+**Spambase (UCI #94).** 4,601 e-mails, 57 numeric features (48 word frequencies, 6 character frequencies, 3 statistics on runs of capital letters) and the label `spam` (1 = spam, 39.4%). There are no missing values. The data contain 391 exact duplicate rows (all 57 features and the label equal; every copy after the first is counted), which were not removed: 104 of the 921 test e-mails have an exact copy (all 57 features and the label equal) among the 3,680 training e-mails, so absolute test scores may be slightly optimistic. All models share the same split, so comparisons are paired; still, the copies may favour models that can memorise training rows (deep trees and tree ensembles) over AdaBoost's stumps, and the narrow XGBoost-vs-AdaBoost result (A.1) should be read with that in mind. The notebook prints both counts right after the train/test split. Six feature names contain symbols (`char_freq_[`, `char_freq_$`, …). XGBoost rejects the `[` in `char_freq_[`, so all six symbol names were renamed (e.g. `char_freq_dollar`, `char_freq_excl`) by the notebook's loader `load_spambase` (see Section 9).
 
-**Wholesale Customers (UCI #292).** 440 customers of a Portuguese wholesale distributor with annual spending (monetary units, m.u.) on six categories: Fresh, Milk, Grocery, Frozen, Detergents_Paper and Delicassen. `Channel` and `Region` were dropped before clustering. `Channel` is used once, *after* clustering, as a post-hoc check.
+**Wholesale Customers (UCI #292).** 440 customers of a Portuguese wholesale distributor with annual spending (monetary units, m.u.) on six categories: Fresh, Milk, Grocery, Frozen, Detergents_Paper and Delicassen. `Channel` and `Region` were dropped before clustering. `Channel` is used only *after* clustering, as a post-hoc check.
 
 Both datasets are committed in `data/`. If a file is missing, the notebook downloads it from the UCI repository (OpenML as a fallback), checks it against the SHA-256 hash of the committed CSV and saves it to `data/`.
 
@@ -58,7 +58,7 @@ Both datasets are committed in `data/`. If a file is missing, the notebook downl
 
 <p class="caption">Table 1 — The single stratified split (tables/t0_split_summary.csv).</p>
 
-**Selection only on training data.** Every choice — K-fold settings, number of selected features k, number of PCA components, hyper-parameters, pruning strength α — is made with stratified K-fold CV on the training set (`StratifiedKFold(5, shuffle=True, random_state=42)` unless stated otherwise). The test set is used once per final model.
+**Selection only on training data.** Every choice — K-fold settings, number of selected features k, number of PCA components, hyper-parameters, pruning strength α — is made with stratified K-fold CV on the training set (`StratifiedKFold(5, shuffle=True, random_state=42)` unless stated otherwise). No choice is ever made on the test set: it gives the final scores, and its other uses, such as the test curves in Figures 12 and 14 and the analyses in Appendix A, are for illustration and analysis only.
 
 **No leakage.** `StandardScaler`, `SelectKBest`, `RFE`, `SelectFromModel` and `PCA` are always steps of an `sklearn.pipeline.Pipeline`. Inside `GridSearchCV`/`cross_val_score` they are therefore refit on every training fold, and for the final model they are fitted on the training set only, then applied to the test set. A grep of the notebook confirms that every `.fit(` / `fit_transform(` call on Spambase uses `X_train` (Section 10, Verification). Task 4 has no train/test split (unsupervised), so fitting the scaler and PCA on all 440 rows is legitimate.
 
@@ -182,9 +182,9 @@ As an extra, the Task 1 Decision Tree is also run on (a) and (b).
 
 **Interpretation (Table 5, Figure 5).**
 
-* **(b) chose no reduction.** CV selected all 57 components. With all components, PCA is just a rotation, and L2 logistic regression is rotation-invariant, so (a) and (b) give *identical* predictions.
+* **(b) chose no reduction.** CV selected all 57 components. With all components, PCA is just a rotation, and L2 logistic regression is rotation-invariant, so (a) and (b) give *identical* test predictions. Their CV means differ by one e-mail out of the 3,680 validated (0.9228 vs 0.9231), consistent with the solver (L-BFGS) stopping at slightly different points in the two coordinate systems.
 * **Real reductions cost accuracy.** With 48 components (95% variance) the test accuracy is 0.9273. With 20 components it falls to about 0.906 CV, and with 2 components to 0.871.
-* **(c) also chose no compression.** With the same component choices as (b) (all n ≤ k, plus n = k), CV picks 40 features → 40 components (test 0.9262), and every compressed setting is worse (best: 40 → 30, CV 0.9114). Selection alone costs 0.3 points against (a); compressing on top costs more.
+* **(c) also chose no compression.** With the same component choices as (b) (all n ≤ k, plus n = k), CV picks 40 features → 40 components (test 0.9262), and every compressed setting is worse (best: 40 → 30, CV 0.9114). Selection alone costs 0.3 points against (a) on the test set; in CV, compressing on top costs more.
 * **PCA hurts the tree badly** (0.9110 → 0.8817). The tree's best PCA size (30 components, 74% variance) beats larger sizes with more variance. Trees rely on axis-aligned, sparse "word present?" splits, and PCA destroys them by mixing all words into every component.
 
 | component block | variance share | CV accuracy (LR) |
@@ -261,16 +261,16 @@ PCA is unsupervised: it ranks directions by spread, not by class separation. On 
 * **Silhouette:** k=2 (0.547) and k=3 (0.548) are clearly best and tied (Δ = 0.001). Every k ≥ 4 scores at most 0.378 (k=6), at least 0.169 below k=2.
 * **Cluster size:** separates the tied pair. At k=3 the extra cluster contains only **2 customers**, and for k ≥ 5 there are one-customer clusters.
 
-**The evidence favours k = 2:** silhouette cannot separate k=2 from k=3 (Δ = 0.001), k=3 adds a 2-customer cluster and otherwise only moves a few retail-tail customers to the dense cluster, and on data capped at the 99th percentile silhouette picks k=2 outright (0.463 vs 0.395 for k=3; Table 10b at the end of this section). As a disclosed tie-breaker we used an explicit rule: take the k with silhouette within 0.01 of the best whose smallest cluster holds at least 5% of customers. This selects **k = 2** (clusters 389/51). We wrote this rule *after* a first draft had picked k=3 and we saw its 2-customer cluster, so it is post hoc and the 5% threshold is a judgement call. Rejected alternatives:
+**The evidence favours k = 2:** silhouette cannot separate k=2 from k=3 (Δ = 0.001), k=3 adds a 2-customer cluster and otherwise only moves a few retail-tail customers to the dense cluster, and on data capped at the 99th percentile silhouette picks k=2 outright (0.463 vs 0.395 for k=3; Table 10b at the end of this section). As a disclosed tie-breaker we used an explicit rule: take the k with silhouette within 0.01 of the best whose smallest cluster holds at least 5% of customers. This selects **k = 2** (clusters 389/51). We wrote this rule *after* a first draft had picked k=3 and we saw its 2-customer cluster, so it is post hoc and the 5% threshold is a judgement call; the capping check was also added after that draft, to test the rule (Section 9). Rejected alternatives:
 
 * **k=3:** tied silhouette, but its third cluster is two outliers.
 * **k=5–6:** the elbow region and a local silhouette bump (0.378), but silhouette is 0.17–0.18 lower and there are singleton clusters.
 * **log1p clustering:** balanced, but its best silhouette is only 0.29.
 
 ![](../figures/t4_pca_clusters.png){: style="width:100%"}
-<p class="caption">Figure 9 — Clusters in PCA(2) space with centroids (✕); chosen k=2 (left) and alternative k=3 (right) (figures/t4_pca_clusters.png).</p>
+<p class="caption">Figure 9 — Clusters in PCA(2) space with centroids (✕); chosen k=2 (left) and alternative k=3 (right). K-Means numbers its clusters arbitrarily, so labels and colours differ between the panels: the dense cloud is cluster 0 (blue) at k=2 and cluster 1 (orange) at k=3, the retail tail is cluster 1 (orange) at k=2 and cluster 0 (blue) at k=3, and cluster 2 (green) holds the two outliers (figures/t4_pca_clusters.png).</p>
 
-**Interpretation (Figure 9).** PC1 (44% of variance) loads on Milk, Grocery and Detergents_Paper, and PC2 (28%) on Fresh, Frozen and Delicassen. With k=2, cluster 1 is the long tail of heavy retail-basket buyers along PC1, and cluster 0 is the dense cloud near the origin. The boundary cuts a continuous tail, which explains a silhouette of only about 0.55. With k=3 the two extreme points high on PC2 get their own centroid, which sits in empty space between them (one came from each k=2 cluster), and a few retail-tail customers move to the dense cluster (sizes 389/51 become 393/45/2).
+**Interpretation (Figure 9).** PC1 (44% of variance) loads on Milk, Grocery and Detergents_Paper, and PC2 (28%) on Fresh, Frozen and Delicassen. With k=2, cluster 1 is the long tail of heavy retail-basket buyers along PC1, and cluster 0 is the dense cloud near the origin. The boundary cuts a continuous tail, which explains a silhouette of only about 0.55. With k=3 the two extreme points high on PC2 get their own centroid, which sits in empty space between them (one came from each k=2 cluster), and a few retail-tail customers move to the dense cluster (sizes: dense cloud 389 → 393, retail tail 51 → 45, plus the 2 outliers).
 
 | features | dims | silhouette (own space) | silhouette (std 6-D) | sizes | min/max | ARI vs (a) |
 |---|---|---|---|---|---|---|
@@ -282,7 +282,7 @@ PCA is unsupervised: it ranks directions by spread, not by class separation. On 
 
 <p class="caption">Table 9 — Clustering at k=2 in different feature spaces (tables/t4_feature_space_comparison.csv).</p>
 
-**Interpretation (Table 9).** Selection rule for (b), stated in advance: while some |r| > 0.7, drop the member of the most-correlated pair with the larger mean |r|. This removed Grocery.
+**Interpretation (Table 9).** Selection rule for (b), which uses only the correlations between the six spending features and no clustering result: while some |r| > 0.7, drop the member of the most-correlated pair with the larger mean |r|. This removed Grocery.
 
 * **(b) selected features.** The silhouette rises to 0.72, but only because the clustering now isolates a 16-customer group of extreme spenders (balance 0.04, ARI 0.37). Grocery is one of two near-duplicate retail features (r = 0.92 with Detergents_Paper), so removing it weakens the retail axis and the outlier directions dominate. A higher silhouette is not a better segmentation here.
 * **(c) PCA.** PCA with 2 components keeps almost the same partition (ARI 0.91) and gives a slightly better 6-D silhouette (0.563). PCA with 3 components reproduces (a) exactly. The structure lives in the first PCs.
@@ -381,7 +381,7 @@ PCA is unsupervised: it ranks directions by spread, not by class separation. On 
 * **Decision Tree, beyond depth ≈ 12: over-fitting.** Training accuracy keeps rising to 0.996, while CV and test accuracy flatten and decline slightly. The train–validation gap grows from 0.01 (depth 3) to 0.05 (depth 12) to 0.08 (depth 25).
 * **XGBoost: stumps under-fit** (0.944), because they cannot model interactions.
 * **XGBoost: no real over-fitting.** Validation accuracy improves up to depth 7–9 (0.958) and stays flat even though training accuracy reaches 0.9995. Shrinkage (lr 0.1) makes each tree a small correction.
-* **Train vs test:** the XGBoost panel compares CV-train with CV-validation accuracy. Its test-accuracy line (illustration only) stays within 0.938–0.951 and is flat from depth 4 on (0.946–0.949), so the test set shows no over-fitting either. For the train-vs-test comparison of all five models, see the CV train accuracy in Table 11 against the test accuracy in Table 12.
+* **Train vs test:** the XGBoost panel compares CV-train with CV-validation accuracy. Its test-accuracy line (illustration only) stays within 0.938–0.951 and is flat from depth 4 on (0.946–0.949), so the test set shows no over-fitting either. For all five models, the gap between CV train accuracy (Table 11) and test accuracy (Table 12), computed from the unrounded values in tables/t5_best_params.csv and tables/t5_test_metrics.csv, is 5.6 points for the Decision Tree and 5.3–5.4 points for Random Forest, XGBoost and Gradient Boosting, which fit the training folds even more closely (0.999–1.000 vs 0.976) yet score higher on the test set. AdaBoost has the smallest gap (2.3 points) but also the lowest CV train accuracy (0.953), the under-fitting pattern of its stumps.
 
 | model | variant | CV-chosen setting | CV acc | test acc | F1 |
 |---|---|---|---|---|---|
@@ -395,7 +395,7 @@ PCA is unsupervised: it ranks directions by spread, not by class separation. On 
 <p class="caption">Table 13 — Ensembles with feature selection and PCA inside pipelines (tables/t5_fs_pca_comparison.csv).</p>
 
 ![](../figures/t5_fs_pca_comparison.png){: style="width:75%"}
-<p class="caption">Figure 13 — Test accuracy, baseline vs feature selection vs PCA (figures/t5_fs_pca_comparison.png).</p>
+<p class="caption">Figure 13 — Test accuracy, baseline vs feature selection vs PCA; the y-axis starts at about 0.886, not at zero, which magnifies the differences, and each bar is labelled with its value (figures/t5_fs_pca_comparison.png).</p>
 
 **Interpretation (Table 13, Figure 13).**
 
@@ -437,7 +437,7 @@ PCA is unsupervised: it ranks directions by spread, not by class separation. On 
 * **Task 4: choice of k.** Our first draft hard-coded k=3 (highest silhouette); its third cluster held 2 customers. We then wrote the size rule of Section 7, which selects k=2. Because that rule was written after seeing the result, we added the capping check of Section 7 rather than relying on the rule alone.
 * **Task 3: unequal grids.** Set-up (c) was first searched only over n ≤ 20 components while (b) could use 57. *Fix:* (c) now uses every n of the (b) grid up to its input size, plus n = k; CV then chose no compression at all.
 * **Task 5: unequal tuning budgets** (XGBoost 36 settings, RF 12, GB 8). We added the equal-budget check of Section 8 instead of re-tuning everything.
-* **Task 3: PCA selected 57 of 57 components** (no reduction). We added the 95%-variance variant to report a real reduction, which was slightly worse.
+* **Task 3: PCA selected 57 of 57 components** (no reduction). We added the 95%-variance variant to report a real reduction, which was slightly worse (test 0.9273 vs 0.9294 for (a), Table 5).
 * **Worse settings, kept in the tables:** the unpruned tree; K=3 CV; k ≤ 10 features; MI selection (fitted on the training data inside the CV folds, scored on the held-out test set); MI→PCA; PCA for DT, RF and XGBoost; AdaBoost; XGBoost with lr 0.01 and 100 trees; RF with depth 5; the correlation-selected and log1p clusterings; the 1-SE pruned tree; the gap statistic.
 * **Extras.** An error-analysis cell first crashed on a NumPy dtype issue in `np.select` (*fix:* a string default), and the k=2 clustering was less stable than hoped (Appendix A.4).
 * **Test-set discipline.** The task asks for test-accuracy curves in Figures 12 and 14. They are shown for illustration only; every choice was made from the CV curves.
@@ -453,8 +453,8 @@ PCA is unsupervised: it ranks directions by spread, not by class separation. On 
 
 **Verification.**
 
-* **Leakage:** every `fit`/`fit_transform` call on Spambase uses `X_train` or runs inside a `Pipeline` evaluated by CV; the test set appears only in `predict`/`score` calls. In Appendix A, thresholds are chosen on out-of-fold training predictions (A.2) and nested CV runs on the training set only (A.1).
-* **Reproducibility:** with the pinned packages, the headline table tables/summary_key_results.csv is identical on Windows with Python 3.12 and 3.13, on Linux (Ubuntu) with Python 3.12 and with the uv install route. The other tables reproduce exactly only on the same platform: a rerun on the same machine changes only wall-clock timing columns and floating-point rounding (largest relative difference 1.2 × 10⁻¹⁴), while on Linux four tables differ slightly: tables/t5_search_gradient_boosting.csv (up to 10% relative on one entry), the cv_std_acc column of tables/t5_best_params.csv (2.2%), tables/x2_auc.csv (about 10⁻⁴) and tables/x2_cost_threshold.csv (3.1%). All numbers in this report come from the Windows Python 3.12 run. The final version was executed after the last changes, with 0 errors.
+* **Leakage:** every `fit`/`fit_transform` call on Spambase uses `X_train` or runs inside a `Pipeline` evaluated by CV; the test set is never passed to a `fit` call; besides predictions and scores it appears only in descriptive summaries (such as Table 1 and the duplicate count in Section 2) and in two Appendix A analyses that fit nothing (the error-analysis means of A.2 and the permutation importance of A.3). In Appendix A, thresholds are chosen on out-of-fold training predictions (A.2) and nested CV runs on the training set only (A.1).
+* **Reproducibility:** with the pinned packages, the headline table tables/summary_key_results.csv is identical on Windows with Python 3.12 and 3.13, on Linux (Ubuntu) with Python 3.12 and with the uv install route. The other tables agree up to floating-point rounding apart from wall-clock timing columns (a rerun on the same machine changes only those columns and the rounding, largest relative difference 1.2 × 10⁻¹⁴), except four tables that differ slightly on Linux: tables/t5_search_gradient_boosting.csv (up to 10% relative on one entry), the cv_std_acc column of tables/t5_best_params.csv (2.2%), tables/x2_auc.csv (about 10⁻⁴) and tables/x2_cost_threshold.csv (3.1%). All numbers in this report come from the Windows Python 3.12 run. The final version was executed after the last changes, with 0 errors.
 * **Coverage:** all 23 figures in `figures/` appear in the notebook and in this report with an interpretation, and every one of the 52 CSVs in `tables/` is interpreted in the notebook and referenced in this report.
 
 # 11. Conclusions
@@ -494,7 +494,7 @@ These checks are not required by the tasks. They use the same split and the fitt
 
 **Interpretation (Figure 15, Tables 15–16).**
 
-* Each test accuracy is known only to about ±1.5 points. XGBoost is significantly better than the Decision Tree and, just, AdaBoost, but **indistinguishable from Random Forest and Gradient Boosting**. The defensible ranking is {XGBoost ≈ GB ≈ RF} ≥ AdaBoost ≥ Decision Tree: after Holm, only XGBoost's lead over AdaBoost is significant, and RF, GB and XGBoost each beat the tree.
+* Each test accuracy is known only to about ±1.5 points. XGBoost is significantly better than the Decision Tree and, just, AdaBoost, but **indistinguishable from Random Forest and Gradient Boosting**. The lead over AdaBoost is narrow (Holm p = 0.049) and may partly reflect the test e-mails that have a copy in the training set (Section 2). The defensible ranking is {XGBoost ≈ GB ≈ RF} ≥ AdaBoost ≥ Decision Tree: after Holm, only XGBoost's lead over AdaBoost is significant, and RF, GB and XGBoost each beat the tree.
 * The nested-CV results are consistent with a small optimism of the tuned CV score, which is a maximum over the grid: +0.1, +0.3 and +0.5 points for 11, 12 and 36 settings. Each gap is below the nested-CV std (0.6–1.1 points), so they do not establish a trend with grid size. The nested ranking is unchanged, so the selection was sound.
 
 ## A.2 The model as a real spam filter
@@ -502,7 +502,7 @@ These checks are not required by the tasks. They use the same split and the fitt
 ![](../figures/x2_roc_pr_curves.png){: style="width:100%"}
 <p class="caption">Figure 16 — ROC and precision–recall curves on the test set (figures/x2_roc_pr_curves.png, tables/x2_auc.csv).</p>
 
-**Interpretation (Figure 16).** The ensembles rank e-mails almost perfectly (ROC AUC 0.979–0.987, average precision 0.968–0.979). The Decision Tree (AUC 0.902) outputs only a few distinct leaf probabilities, so its precision at 90% recall collapses to 0.42.
+**Interpretation (Figure 16).** The ensembles rank e-mails almost perfectly (ROC AUC 0.979–0.987, average precision 0.968–0.979). The Decision Tree (AUC 0.902) outputs only a few distinct leaf probabilities, so its best precision at 90% recall or more is only 0.42. Figure 16 joins its few operating points with straight lines; points on those lines are not reachable by any threshold, so the tree's curve looks higher there than any threshold delivers.
 
 ![](../figures/x2_cost_vs_threshold.png){: style="width:80%"}
 <p class="caption">Figure 17 — Out-of-fold training cost vs decision threshold (false positive = 10, false negative = 1); dots mark the chosen thresholds (figures/x2_cost_vs_threshold.png).</p>

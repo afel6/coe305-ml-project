@@ -61,10 +61,10 @@ and `tables/` next to it.
 
 Every random component uses `random_state=42` (`np.random.seed(42)` is also set). With the pinned packages,
 `tables/summary_key_results.csv` (the headline numbers) is identical on Windows with Python 3.12 and 3.13, on Linux
-(Ubuntu) with Python 3.12 and with the uv route. The other tables reproduce exactly only on the same platform: on
-Linux, `t5_search_gradient_boosting.csv` (up to 10% relative on one entry), the `cv_std_acc` column of
-`t5_best_params.csv` (2.2%), `x2_auc.csv` (about 1e-4) and `x2_cost_threshold.csv` (3.1%) differ slightly, and
-wall-clock timing columns differ on every run. The committed outputs and the report's numbers come from the Windows
+(Ubuntu) with Python 3.12 and with the uv route. The other tables agree up to floating-point rounding, except wall-clock
+timing columns, which differ on every run, and four tables that differ slightly on Linux: `t5_search_gradient_boosting.csv`
+(up to 10% relative on one entry), the `cv_std_acc` column of `t5_best_params.csv` (2.2%), `x2_auc.csv` (about 1e-4) and
+`x2_cost_threshold.csv` (3.1%). The committed outputs and the report's numbers come from the Windows
 Python 3.12 run.
 
 CI (`.github/workflows/ci.yml`) executes the notebook on Ubuntu and Windows with Python 3.12 and 3.13 and checks the
@@ -86,6 +86,6 @@ AGENTS.md               the "For graders" block, for coding agents
 
 ## Protocol
 - One stratified train/test split (`test_size=0.2`, `random_state=42`) for every classification task (1, 2, 3, 5).
-- All model/parameter selection by stratified 5-fold CV on the training set; the test set is used only for final scores.
+- All model/parameter selection by stratified 5-fold CV on the training set; no choice is ever made on the test set: it gives the final scores, and its other uses, such as the report's test curves (Figures 12 and 14) and Appendix A, are for illustration and analysis only.
 - Scaling, feature selection and PCA are steps inside `sklearn` `Pipeline`s, so they are fitted on training folds only.
-- K-Means (Task 4) uses only the six spending features; `Channel`/`Region` are dropped (Channel is used once, post hoc, for interpretation).
+- K-Means (Task 4) uses only the six spending features; `Channel`/`Region` are dropped (Channel is used only after clustering, post hoc, for interpretation).
