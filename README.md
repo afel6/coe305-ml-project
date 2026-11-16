@@ -5,7 +5,7 @@ Students: Mohammed Bendardf (229912053), Abdalraouf Alkabir (2309015482)
 ## For graders
 
 - Install (Python 3.12 virtual environment, see [Setup and run](#setup-and-run)): `python -m pip install -r requirements.txt -c constraints.txt`
-- Run: `python -m jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=1800 notebook.ipynb`
+- Run: `python -m nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=1800 notebook.ipynb`
 - Measured runtime of the whole notebook on a laptop CPU: 598 s (Windows, Python 3.12), 626 s (Ubuntu on WSL, Python 3.12), 672 s (Windows, Python 3.13, latest packages); 17–26 min when two or three runs share the machine.
 - No run is needed to see the results: `notebook.ipynb` is committed executed, with every output; `figures/` and `tables/` hold every figure and table it writes; the report is `report/report.pdf`.
 
@@ -29,8 +29,8 @@ from the repository root. The commands call the virtual environment's interprete
    - Windows: `.venv\Scripts\python.exe -m pip install -r requirements.txt -c constraints.txt`
    - Linux/macOS: `.venv/bin/python -m pip install -r requirements.txt -c constraints.txt`
 3. Execute the notebook in place:
-   - Windows: `.venv\Scripts\python.exe -m jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=1800 notebook.ipynb`
-   - Linux/macOS: `.venv/bin/python -m jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=1800 notebook.ipynb`
+   - Windows: `.venv\Scripts\python.exe -m nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=1800 notebook.ipynb`
+   - Linux/macOS: `.venv/bin/python -m nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=1800 notebook.ipynb`
 4. Optional: rebuild the PDF with `.venv\Scripts\python.exe report/build_pdf.py` (Windows) or
    `.venv/bin/python report/build_pdf.py` (needs Microsoft Edge or Chrome).
 
@@ -38,9 +38,9 @@ No Python 3.12 installed? [uv](https://docs.astral.sh/uv/) provides one: replace
 `uv venv --python 3.12` and `uv pip install -r requirements.txt -c constraints.txt`, then run step 3 as above.
 
 **If virtual-environment launchers are blocked** (some managed Windows machines block `.venv\Scripts\python.exe`
-and `jupyter.exe` through Application Control), install the requirements into a standalone Python and call it
+and `jupyter-nbconvert.exe` through Application Control), install the requirements into a standalone Python and call it
 directly, e.g. with uv: `uv pip install --python <path-to-python.exe> --system -r requirements.txt -c constraints.txt`, then run
-`<path-to-python.exe> -m jupyter nbconvert ...` as above.
+`<path-to-python.exe> -m nbconvert ...` as above.
 
 The run succeeded if nbconvert ends with `Writing ... bytes to notebook.ipynb` and exits with code 0. The console
 also shows harmless warnings (zmq event loop, unencrypted local kernel). On Windows it may show joblib `KeyError`
