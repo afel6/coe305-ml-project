@@ -1,3 +1,0 @@
-# Only for the optional Kumo extra (extras/kumo/kumo_predict.py). Install on top of ../../requirements.txt.
-torch==2.15.0
-structured-data-models==0.2.1

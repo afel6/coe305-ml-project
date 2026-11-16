@@ -1,2 +1,0 @@
-comparison,accuracy_diff,ci_low,ci_high,share_of_resamples_kumo_wins,kumo_right_xgb_wrong,kumo_wrong_xgb_right,both_wrong,mcnemar_p_exact
-KumoTabular - XGBoost,0.014115092290988063,0.0032573289902280145,0.02497285559174811,0.9945,20,7,29,0.0191572904586792
