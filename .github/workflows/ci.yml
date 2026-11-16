@@ -44,7 +44,7 @@ jobs:
       - name: Execute notebook
         shell: bash
         run: >-
-          python -m jupyter nbconvert --to notebook --execute
+          python -m nbconvert --to notebook --execute
           --ExecutePreprocessor.timeout=1800
           --output executed.ipynb notebook.ipynb
 
@@ -101,7 +101,7 @@ jobs:
           cp notebook.ipynb "$RUNNER_TEMP/upload-route/"
           cd "$RUNNER_TEMP/upload-route"
           ls -A
-          python -m jupyter nbconvert --to notebook --execute \
+          python -m nbconvert --to notebook --execute \
             --ExecutePreprocessor.timeout=1800 \
             --output-dir "$RUNNER_TEMP" --output executed.ipynb notebook.ipynb
 
