@@ -12,7 +12,7 @@ T3 components for 95% variance,48.0
 T3 (a) original features [LogReg] test accuracy,0.9294245385450597
 T3 (b) PCA [LogReg] test accuracy,0.9294245385450597
 "T3 (b') PCA, 95% variance rule (n=48) [LogReg] test accuracy",0.9272529858849077
-T3 (c) MI selection → PCA [LogReg] test accuracy,0.9163952225841476
+T3 (c) MI selection → PCA [LogReg] test accuracy,0.9261672095548317
 T3 extra: (a) original features [DecisionTree (Task 1)] test accuracy,0.9109663409337676
 T3 extra: (b) PCA [DecisionTree (Task 1)] test accuracy,0.8816503800217155
 T4 chosen k,2.0

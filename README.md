@@ -37,6 +37,11 @@ from the repository root. The commands call the virtual environment's interprete
 No Python 3.12 installed? [uv](https://docs.astral.sh/uv/) provides one: replace steps 1–2 with
 `uv venv --python 3.12` and `uv pip install -r requirements.txt -c constraints.txt`, then run step 3 as above.
 
+**If virtual-environment launchers are blocked** (some managed Windows machines block `.venv\Scripts\python.exe`
+and `jupyter.exe` through Application Control), install the requirements into a standalone Python and call it
+directly, e.g. with uv: `uv pip install --python <path-to-python.exe> --system -r requirements.txt -c constraints.txt`, then run
+`<path-to-python.exe> -m jupyter nbconvert ...` as above.
+
 The run succeeded if nbconvert ends with `Writing ... bytes to notebook.ipynb` and exits with code 0. The console
 also shows harmless warnings (zmq event loop, unencrypted local kernel). On Windows it may show joblib `KeyError`
 tracebacks at kernel shutdown: they are harmless, nbconvert still exits with code 0 and they are not in the notebook.
