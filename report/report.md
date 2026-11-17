@@ -79,7 +79,7 @@ Both datasets are committed in `data/`. If a file is missing, the notebook downl
 |---|---|---|---|---|---|---|---|
 | 3 | 0.9054 | 0.0036 | 0.8804 | 0.0051 | 0.15 | 2,453 | 0.0045 |
 | 5 | 0.9136 | 0.0109 | 0.8910 | 0.0134 | 0.32 | 2,944 | 0.0034 |
-| 10 | 0.9117 | 0.0107 | 0.8884 | 0.0136 | 1.00 | 3,312 | 0.0021 |
+| 10 | 0.9117 | 0.0107 | 0.8884 | 0.0136 | 0.67 | 3,312 | 0.0021 |
 
 <p class="caption">Table 3 — Stratified K-fold CV on the training set (tables/t1_cv_comparison.csv; per-fold values in tables/t1_fold_scores.csv).</p>
 
@@ -90,7 +90,7 @@ Both datasets are committed in `data/`. If a file is missing, the notebook downl
 
 * **Bias.** K=3 gives the most pessimistic estimate (0.905). Each model sees only 67% of the training data, so the estimate is biased downwards. K=5 and K=10 agree (0.914 / 0.912).
 * **Stability.** The std across folds is *larger* for K=5/10 (≈0.011) than for K=3 (0.004), because smaller validation folds give noisier individual scores. The quantity that matters for model selection is the variability of the CV *mean*. We measured it by repeating each CV with 10 different shuffles: it *decreases* with K (0.0045 → 0.0034 → 0.0021). So larger K gives a less biased and more stable estimate.
-* **Runtime** grows with K (0.15 → 0.32 → 1.00 s): K fits, each on a larger part of the training set. Wall-clock times depend on the machine and its load (up to about 4.5× between runs of this notebook) and are not results; only the ordering is stable.
+* **Runtime** grows with K (0.15 → 0.32 → 0.67 s): K fits, each on a larger part of the training set. Wall-clock times depend on the machine and its load (up to about 5× between runs of this notebook) and are not results; only the ordering is stable.
 * **CV vs single split.** The single-split accuracy (0.9110) lies inside the K=5 and K=10 intervals (mean ± 1 std), just above the K=3 interval (0.9018–0.9090), and matches K=10. It is one draw with a standard error of about 0.009, and it gives no spread. CV reuses all training data and also provides the uncertainty.
 * We use K=5 for all later model selection as the compromise between bias, stability and cost.
 
@@ -268,7 +268,7 @@ PCA is unsupervised: it ranks directions by spread, not by class separation. On 
 * **log1p clustering:** balanced, but its best silhouette is only 0.29.
 
 ![](../figures/t4_pca_clusters.png){: style="width:100%"}
-<p class="caption">Figure 9 — Clusters in PCA(2) space with centroids (✕); chosen k=2 (left) and alternative k=3 (right). K-Means numbers its clusters arbitrarily, so labels and colours differ between the panels: the dense cloud is cluster 0 (blue) at k=2 and cluster 1 (orange) at k=3, the retail tail is cluster 1 (orange) at k=2 and cluster 0 (blue) at k=3, and cluster 2 (green) holds the two outliers (figures/t4_pca_clusters.png).</p>
+<p class="caption">Figure 9 — Clusters in PCA(2) space with centroids (✕); chosen k=2 (top) and alternative k=3 (bottom). K-Means numbers its clusters arbitrarily, so labels and colours differ between the panels: the dense cloud is cluster 0 (blue) at k=2 and cluster 1 (orange) at k=3, the retail tail is cluster 1 (orange) at k=2 and cluster 0 (blue) at k=3, and cluster 2 (green) holds the two outliers (figures/t4_pca_clusters.png).</p>
 
 **Interpretation (Figure 9).** PC1 (44% of variance) loads on Milk, Grocery and Detergents_Paper, and PC2 (28%) on Fresh, Frozen and Delicassen. With k=2, cluster 1 is the long tail of heavy retail-basket buyers along PC1, and cluster 0 is the dense cloud near the origin. The boundary cuts a continuous tail, which explains a silhouette of only about 0.55. With k=3 the two extreme points high on PC2 get their own centroid, which sits in empty space between them (one came from each k=2 cluster), and a few retail-tail customers move to the dense cluster (sizes: dense cloud 389 → 393, retail tail 51 → 45, plus the 2 outliers).
 
