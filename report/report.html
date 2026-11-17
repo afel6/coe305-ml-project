@@ -148,7 +148,7 @@ code { font-size: 9pt; background: #f4f4f2; padding: 0 2px; }
 <td>0.0036</td>
 <td>0.8804</td>
 <td>0.0051</td>
-<td>0.14</td>
+<td>0.31</td>
 <td>2,453</td>
 <td>0.0045</td>
 </tr>
@@ -158,7 +158,7 @@ code { font-size: 9pt; background: #f4f4f2; padding: 0 2px; }
 <td>0.0109</td>
 <td>0.8910</td>
 <td>0.0134</td>
-<td>0.29</td>
+<td>0.61</td>
 <td>2,944</td>
 <td>0.0034</td>
 </tr>
@@ -168,7 +168,7 @@ code { font-size: 9pt; background: #f4f4f2; padding: 0 2px; }
 <td>0.0107</td>
 <td>0.8884</td>
 <td>0.0136</td>
-<td>0.64</td>
+<td>0.82</td>
 <td>3,312</td>
 <td>0.0021</td>
 </tr>
@@ -183,7 +183,7 @@ code { font-size: 9pt; background: #f4f4f2; padding: 0 2px; }
 <ul>
 <li><strong>Bias.</strong> K=3 gives the most pessimistic estimate (0.905). Each model sees only 67% of the training data, so the estimate is biased downwards. K=5 and K=10 agree (0.914 / 0.912).</li>
 <li><strong>Stability.</strong> The std across folds is <em>larger</em> for K=5/10 (≈0.011) than for K=3 (0.004), because smaller validation folds give noisier individual scores. The quantity that matters for model selection is the variability of the CV <em>mean</em>. We measured it by repeating each CV with 10 different shuffles: it <em>decreases</em> with K (0.0045 → 0.0034 → 0.0021). So larger K gives a less biased and more stable estimate.</li>
-<li><strong>Runtime</strong> grows with K (0.14 → 0.29 → 0.64 s): K fits, each on a larger part of the training set. Wall-clock times depend on the machine and its load (up to about 5× between runs of this notebook) and are not results; only the ordering is stable.</li>
+<li><strong>Runtime</strong> grows with K (0.31 → 0.61 → 0.82 s): K fits, each on a larger part of the training set. Wall-clock times depend on the machine and its load (up to about 6× between runs of this notebook) and are not results; only the ordering is stable.</li>
 <li><strong>CV vs single split.</strong> The single-split accuracy (0.9110) lies inside the K=5 and K=10 intervals (mean ± 1 std), just above the K=3 interval (0.9018–0.9090), and matches K=10. It is one draw with a standard error of about 0.009, and it gives no spread. CV reuses all training data and also provides the uncertainty.</li>
 <li>We use K=5 for all later model selection as the compromise between bias, stability and cost.</li>
 </ul>

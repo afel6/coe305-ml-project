@@ -77,9 +77,9 @@ Both datasets are committed in `data/`. If a file is missing, the notebook downl
 
 | K | mean acc | std acc | mean F1 | std F1 | time (s) | train rows/fold | std of CV mean (10 repeats) |
 |---|---|---|---|---|---|---|---|
-| 3 | 0.9054 | 0.0036 | 0.8804 | 0.0051 | 0.14 | 2,453 | 0.0045 |
-| 5 | 0.9136 | 0.0109 | 0.8910 | 0.0134 | 0.29 | 2,944 | 0.0034 |
-| 10 | 0.9117 | 0.0107 | 0.8884 | 0.0136 | 0.64 | 3,312 | 0.0021 |
+| 3 | 0.9054 | 0.0036 | 0.8804 | 0.0051 | 0.31 | 2,453 | 0.0045 |
+| 5 | 0.9136 | 0.0109 | 0.8910 | 0.0134 | 0.61 | 2,944 | 0.0034 |
+| 10 | 0.9117 | 0.0107 | 0.8884 | 0.0136 | 0.82 | 3,312 | 0.0021 |
 
 <p class="caption">Table 3 — Stratified K-fold CV on the training set (tables/t1_cv_comparison.csv; per-fold values in tables/t1_fold_scores.csv).</p>
 
@@ -90,7 +90,7 @@ Both datasets are committed in `data/`. If a file is missing, the notebook downl
 
 * **Bias.** K=3 gives the most pessimistic estimate (0.905). Each model sees only 67% of the training data, so the estimate is biased downwards. K=5 and K=10 agree (0.914 / 0.912).
 * **Stability.** The std across folds is *larger* for K=5/10 (≈0.011) than for K=3 (0.004), because smaller validation folds give noisier individual scores. The quantity that matters for model selection is the variability of the CV *mean*. We measured it by repeating each CV with 10 different shuffles: it *decreases* with K (0.0045 → 0.0034 → 0.0021). So larger K gives a less biased and more stable estimate.
-* **Runtime** grows with K (0.14 → 0.29 → 0.64 s): K fits, each on a larger part of the training set. Wall-clock times depend on the machine and its load (up to about 5× between runs of this notebook) and are not results; only the ordering is stable.
+* **Runtime** grows with K (0.31 → 0.61 → 0.82 s): K fits, each on a larger part of the training set. Wall-clock times depend on the machine and its load (up to about 6× between runs of this notebook) and are not results; only the ordering is stable.
 * **CV vs single split.** The single-split accuracy (0.9110) lies inside the K=5 and K=10 intervals (mean ± 1 std), just above the K=3 interval (0.9018–0.9090), and matches K=10. It is one draw with a standard error of about 0.009, and it gives no spread. CV reuses all training data and also provides the uncertainty.
 * We use K=5 for all later model selection as the compromise between bias, stability and cost.
 
