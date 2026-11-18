@@ -129,7 +129,7 @@ These are the classical spam markers plus strong ham markers: the corpus comes f
 * **k ≤ 10: worse than the baseline (under-fitting).** For example, MI with 5 features scores 0.858. MI is weakest here because it ranks features one at a time, so its top 5 includes two correlated capital-run statistics (r = 0.48 on the training set) instead of complementary words such as *remove* and *free*.
 * **k = 15–40: about the same as or slightly better than the baseline** (CV 0.9114–0.9182 vs 0.9136). The 20–40 weakest features are almost always zero, and a fully grown tree uses them only to split tiny groups, which likely adds variance. Removing them is mild regularization. The gain is small because a tree already selects features implicitly.
 * **k = 57** reproduces the baseline exactly.
-* **Test set.** The RF-importance selector (20 features) gives the best tree (0.9229, F1 0.9018, +1.2 points), RFE +0.5 and MI −0.1 points. These differences (up to 12 e-mails) were not tested for significance and the CV gains are within one fold-std, so no selector is reliably better: the robust conclusion is that about 35% of the features reach the same accuracy.
+* **Test set.** The RF-importance selector (20 features) gives the best tree (0.9229, F1 0.9018, +1.2 points), RFE +0.5 and MI −0.1 points. These differences (up to 11 e-mails) were not tested for significance and the CV gains are within one fold-std, so no selector is reliably better: the robust conclusion is that about 35% of the features reach the same accuracy.
 
 # 6. Task 3 — Feature Extraction with PCA
 
