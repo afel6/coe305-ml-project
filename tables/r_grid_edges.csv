@@ -1,0 +1,7 @@
+model,grid,settings,best_params,params_on_grid_edge,cv_mean_acc,cv_std_acc,test_acc,test_f1
+Gradient Boosting,5.2 grid,8,"{'learning_rate': 0.1, 'max_depth': 5, 'n_estimators': 300}","learning_rate, max_depth, n_estimators",0.954891304347826,0.007106900451424997,0.9457111834961998,0.930939226519337
+Gradient Boosting,5.2 grid + steps past its edges,12,"{'learning_rate': 0.1, 'max_depth': 5, 'n_estimators': 500}","learning_rate (not varied), max_depth (not varied)",0.9578804347826088,0.006015202070972465,0.9457111834961998,0.9313186813186813
+XGBoost,5.2 grid,36,"{'learning_rate': 0.1, 'max_depth': 7, 'n_estimators': 300}",max_depth,0.9576086956521739,0.009069738732760116,0.9467969598262758,0.9324137931034483
+XGBoost,5.2 grid + steps past its edges,38,"{'learning_rate': 0.1, 'max_depth': 9, 'n_estimators': 300}","learning_rate (not varied), n_estimators (not varied)",0.9584239130434783,0.007569776237600061,0.9489685124864278,0.9353507565337001
+AdaBoost,5.2 grid,6,"{'learning_rate': 1.0, 'n_estimators': 300}",learning_rate,0.9423913043478261,0.00547539176076357,0.9294245385450597,0.9093444909344491
+AdaBoost,5.2 grid + steps past its edges,8,"{'learning_rate': 1.5, 'n_estimators': 300}",n_estimators (not varied),0.9429347826086957,0.010732835683767135,0.9413680781758957,0.925414364640884

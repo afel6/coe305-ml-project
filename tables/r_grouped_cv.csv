@@ -1,0 +1,3 @@
+model,cv,cv_mean_acc,cv_std_acc
+XGBoost,"StratifiedKFold(5), as in 5.2",0.9576086956521739,0.010140276172307209
+XGBoost,StratifiedGroupKFold(5): all copies of an e-mail in one fold,0.9556666952643809,0.01004579542444149

@@ -1,0 +1,2 @@
+setup,k,n_components,cv_mean_acc,cv_std_acc,accuracy,precision,recall,f1
+"(c') MI selection -> PCA, best compressed setting by CV",40,30,0.9114130434782608,0.010643019580198997,0.9163952225841476,0.9156976744186046,0.8677685950413223,0.8910891089108911

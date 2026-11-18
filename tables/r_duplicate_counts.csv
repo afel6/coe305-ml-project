@@ -1,0 +1,6 @@
+quantity,value
+"duplicate rows, all e-mails (every copy after the first)",391
+duplicate rows within the training set,284
+training feature rows that occur with both labels,1
+test e-mails with a copy in the training set,104
+test e-mails without a copy in the training set,817

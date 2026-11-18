@@ -1,0 +1,7 @@
+grid,base_tree_max_depth,settings,best_params,params_on_grid_edge,cv_mean_acc,cv_std_acc,test_acc,test_f1
+5.2 grid (stumps),1,6,"{'learning_rate': 1.0, 'n_estimators': 300}",learning_rate,0.9423913043478261,0.00547539176076357,0.9294245385450597,0.9093444909344491
+best at this depth,1,6,"{'base_tree_max_depth': 1, 'learning_rate': 1.0, 'n_estimators': 300}",learning_rate,0.9423913043478261,0.00547539176076357,0.9294245385450597,0.9093444909344491
+best at this depth,2,1,"{'base_tree_max_depth': 2, 'learning_rate': 1.0, 'n_estimators': 300}","learning_rate (not varied), n_estimators (not varied)",0.9445652173913043,0.008349071465074577,0.9478827361563518,0.9333333333333333
+best at this depth,3,1,"{'base_tree_max_depth': 3, 'learning_rate': 1.0, 'n_estimators': 300}","learning_rate (not varied), n_estimators (not varied)",0.9464673913043479,0.006906665775618933,0.9402823018458197,0.9245541838134431
+best at this depth,4,1,"{'base_tree_max_depth': 4, 'learning_rate': 1.0, 'n_estimators': 300}","learning_rate (not varied), n_estimators (not varied)",0.9573369565217391,0.007903825854483114,0.9511400651465798,0.938101788170564
+best at this depth (CV-best overall),5,1,"{'base_tree_max_depth': 5, 'learning_rate': 1.0, 'n_estimators': 300}","base_tree_max_depth, learning_rate (not varied), n_estimators (not varied)",0.9578804347826088,0.0061367335818675135,0.9457111834961998,0.9303621169916435

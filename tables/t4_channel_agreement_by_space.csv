@@ -1,0 +1,11 @@
+features,cluster,n_customers,Horeca,Retail,majority_channel,agreement_majority_channel,ARI_vs_Channel
+(a) original 6 features (standardized),0,389,293,96,Horeca,0.7704545454545455,0.2352296191368906
+(a) original 6 features (standardized),1,51,5,46,Retail,0.7704545454545455,0.2352296191368906
+(b) selected 5 features (standardized),0,424,295,129,Horeca,0.7,0.05791310571340378
+(b) selected 5 features (standardized),1,16,3,13,Retail,0.7,0.05791310571340378
+"(c) PCA, 2 components",0,395,296,99,Horeca,0.7704545454545455,0.2308428703616923
+"(c) PCA, 2 components",1,45,2,43,Retail,0.7704545454545455,0.2308428703616923
+"(c) PCA, 3 components (≥80% var)",0,51,5,46,Retail,0.7704545454545455,0.2352296191368906
+"(c) PCA, 3 components (≥80% var)",1,389,293,96,Horeca,0.7704545454545455,0.2352296191368906
+extra: log1p + standardized,0,252,244,8,Horeca,0.8590909090909091,0.5135430824813362
+extra: log1p + standardized,1,188,54,134,Retail,0.8590909090909091,0.5135430824813362
